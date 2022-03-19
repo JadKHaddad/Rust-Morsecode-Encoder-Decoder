@@ -6,6 +6,7 @@ use rustc_serialize::json::Json;
 use std::fs::File;
 use std::io::Read;
 use colored::*;
+use clap::{Arg, App};
 
 static ENCODE_FILE: &str = "morse-code-encode.json";
 static DECODE_FILE: &str = "morse-code-decode.json";
@@ -100,18 +101,54 @@ pub fn decode(input: &str) -> Result<String, CustomError> {
 }
 
 fn main() {
-    loop{
-        println!("Input:");
-        let mut input = String::new();
-        std::io::stdin().read_line(&mut input).expect("Error: Failed to read line");
-        /*match encode(&input) {
-            Ok(ok) => println!("\nOutput: {}", ok.green()),
-            Err(_) => continue
+    let matches = App::new("Morsecode Encoder Decoder")
+        .version("1.0")
+        .arg(Arg::with_name("encode")
+                 .short('e')
+                 .long("encode")
+                 .takes_value(true)
+                 .help("Encode string"))
+        .arg(Arg::with_name("decode")
+                 .short('d')
+                 .long("decode")
+                 .takes_value(true)
+                 .help("Decode morsecode"))
+        .get_matches();
+
+    let encode_val = matches.value_of("encode").unwrap_or("");
+    let decode_val  = matches.value_of("decode").unwrap_or("");
+    if encode_val != "" {
+        match encode(encode_val) {
+            Ok(ok) => {
+                println!("{}", ok.green());
+                process::exit(1);
+            },
+            _ => process::exit(1)
         };
-        */
-        match decode(&input) {
-            Ok(ok) => println!("\nOutput: {}", ok.green()),
-            Err(_) => continue
+    }
+    else if decode_val != "" {
+        match decode(decode_val) {
+            Ok(ok) => {
+                println!("{}", ok.green());
+                process::exit(1);
+            },
+            _ => process::exit(1)
         };
+    }
+    else {
+        loop{
+            println!("Input:");
+            let mut input = String::new();
+            std::io::stdin().read_line(&mut input).expect("Error: Failed to read line");
+            /*match encode(&input) {
+                Ok(ok) => println!("\nOutput: {}", ok.green()),
+                Err(_) => continue
+            };
+            */
+            match decode(&input) {
+                Ok(ok) => println!("\nOutput: {}", ok.green()),
+                Err(_) => continue
+            };
+        }
     }
 }
