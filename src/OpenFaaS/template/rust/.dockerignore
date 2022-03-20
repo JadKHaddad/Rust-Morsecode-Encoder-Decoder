@@ -1,4 +1,3 @@
-target
-Cargo.lock
+main/target
+main/Cargo.lock
 build
-tests

@@ -4,4 +4,7 @@ version = "0.1.0"
 authors = ["Mark Sta Ana <booyaabooyaabooyaa@gmail.com>"]
 
 [dependencies]
+# deploy
 handler = { path = "../function" }
+# debug build
+# handler = { path = "../../../function" }
