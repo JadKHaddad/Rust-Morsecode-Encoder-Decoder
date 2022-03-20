@@ -60,7 +60,7 @@ pub fn encode(input: &str) -> Result<String, CustomError> {
         let code_char = unescape(& match json.find_path(&[&c.to_string()]){
             Some(ok) => ok,
             None => {
-                println!("The fuck is this {} ? Try again", c.to_string().red());
+                println!("The fuck is this {} ? Try again or use -h for help", c.to_string().red());
                 success = false;
                 break;
             }
@@ -86,7 +86,7 @@ pub fn decode(input: &str) -> Result<String, CustomError> {
         let code_char = unescape(& match json.find_path(&[&words[i].to_string()]){
             Some(ok) => ok,
             None => {
-                println!("The fuck is this {} ? Try again", words[i].to_string().red());
+                println!("The fuck is this {} ? Try again or use -h for help", words[i].to_string().red());
                 success = false;
                 break;
             }
@@ -101,7 +101,7 @@ pub fn decode(input: &str) -> Result<String, CustomError> {
 }
 
 pub fn print_not_valid_input(){
-    println!("{} Use -h for more info", "Input is not valid.".red());
+    println!("{} Use -h for help", "Input is not valid.".red());
 }
 
 fn main() {
