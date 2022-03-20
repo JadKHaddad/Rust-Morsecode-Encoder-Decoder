@@ -1,5 +1,5 @@
 extern crate rustc_serialize;
-use clap::{Command, Arg};
+use clap::{Arg, Command};
 use colored::*;
 use regex::Regex;
 use rustc_serialize::json::Json;
@@ -57,7 +57,7 @@ pub fn encode(input: &str, json: &Json) -> Result<String, CustomError> {
     let clean_input_slice = utf8_slice(&clean_input, 0, clean_input_len).unwrap();
     let mut success = true;
     for (i, c) in clean_input_slice.chars().enumerate() {
-        if c == '\n' {
+        if i == clean_input_len - 1 && c == ' ' {
             break;
         }
         let code_char = unescape(
@@ -126,8 +126,39 @@ pub fn print_not_valid_input() {
     println!("{} Use -h for help", "Input is not valid.".red());
 }
 
+pub enum Decision {
+    ENCODE,
+    DECODE,
+}
+
+pub fn decide(input: &str) -> Decision {
+    let clean_input = Regex::new(r"\s+")
+        .unwrap()
+        .replace_all(&input, " ")
+        .to_string();
+    let split = clean_input.split(" ");
+    let words: Vec<&str> = split.collect();
+    // if all words consist of - and . => decode else encode
+    let mut encode = false;
+    let re = Regex::new(r"^[.-]+$").unwrap();
+    for word in &words {
+        if word == &"" {
+            continue;
+        }
+        if !re.is_match(word) {
+            encode = true;
+            break;
+        }
+    }
+    if encode {
+        return Decision::ENCODE;
+    }
+    Decision::DECODE
+}
+
 fn main() {
     let matches = Command::new("Morsecode Encoder Decoder")
+        .arg_required_else_help(true)
         .version("1.0")
         .arg(
             Arg::new("encode")
@@ -143,10 +174,18 @@ fn main() {
                 .takes_value(true)
                 .help("Decode morsecode. Usage: -d \"[-. .. -.-. .]\""),
         )
+        .arg(
+            Arg::new("interactive")
+                .short('i')
+                .long("interactive")
+                .help("Interactive session with dynamic input"),
+        )
         .get_matches();
 
     let encode_val = matches.value_of("encode").unwrap_or("");
     let decode_val = matches.value_of("decode").unwrap_or("");
+    let interactive = matches.is_present("interactive");
+
     let re = Regex::new(r"^\[.*?\]$").unwrap();
     let json_encode = json_from_file(ENCODE_FILE);
     let json_decode = json_from_file(DECODE_FILE);
@@ -174,23 +213,23 @@ fn main() {
         } else {
             print_not_valid_input();
         }
-    } else {
+    } else if interactive {
         loop {
             println!("Input:");
             let mut input = String::new();
             std::io::stdin()
                 .read_line(&mut input)
                 .expect("Error: Failed to read line");
-            /*
-            match encode(&input, &json_encode) {
-                Ok(ok) => println!("\nOutput: {}", ok.green()),
-                Err(_) => continue
-            };
-            */
-            match decode(&input, &json_decode) {
-                Ok(ok) => println!("\nOutput: {}", ok.green()),
-                Err(_) => continue,
-            };
+            match decide(&input) {
+                Decision::ENCODE => match encode(&input, &json_encode) {
+                    Ok(ok) => println!("\nEncode: {}", ok.green()),
+                    Err(_) => continue,
+                },
+                Decision::DECODE => match decode(&input, &json_decode) {
+                    Ok(ok) => println!("\nDecode: {}", ok.green()),
+                    Err(_) => continue,
+                },
+            }
         }
     }
 }
