@@ -16,10 +16,6 @@ OPTIONS:
 
 ## Docker
 
-Clean before build
-```sh
-cargo clean
-```
 Build
 ```sh
 docker build -t rust-morse:1.0 .

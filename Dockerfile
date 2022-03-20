@@ -1,4 +1,3 @@
-# clean before build: cargo clean
 # build: docker build -t rust-morse:1.0 .
 # run: docker run --rm -it rust-morse:1.0 [OPTIONS]
 
