@@ -13,3 +13,18 @@ OPTIONS:
     -i, --interactive        Interactive session with dynamic input
     -V, --version            Print version information
 ```
+
+## Docker
+
+Clean before build
+```sh
+cargo clean
+```
+Build
+```sh
+docker build -t rust-morse:1.0 .
+```
+Run
+```sh
+docker run --rm -it rust-morse:1.0 [OPTIONS]
+```
