@@ -1,3 +1,3 @@
 # Rust-Morsecode-Encoder-Decoder OpenFaaS-Function
 
-## This is a modified template
+This is a modified template
