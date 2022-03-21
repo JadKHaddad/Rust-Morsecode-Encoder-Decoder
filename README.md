@@ -1,6 +1,10 @@
 # Rust-Morsecode-Encoder-Decoder
 
 ```sh
+cd main
+cargo run --
+```
+```sh
 Morsecode Encoder Decoder 1.0
 
 USAGE:
