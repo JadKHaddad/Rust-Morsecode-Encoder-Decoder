@@ -53,4 +53,9 @@ faas-cli up -f morse-function.yml
 Try it
 ```sh
 {"encode":true, "decode":false, "input":"serverless"}
+
+# encode == true => encode
+# encode == true && decode == true => encode
+# encode == false && decode == true => decode
+# encode == false && decode == false => Error
 ```
