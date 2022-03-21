@@ -7,7 +7,34 @@ use std::io::Read;
 
 pub enum FileStatus {
     NotFound,
-    NotValid
+    NotValid,
+}
+
+pub enum Decision {
+    ENCODE,
+    DECODE,
+}
+
+pub fn decide(input: &str) -> Decision {
+    let clean_input = clean_input(input);
+    let split = clean_input.split(" ");
+    let words: Vec<&str> = split.collect();
+    // if all words consist of - and . => decode else encode
+    let mut encode = false;
+    let re = Regex::new(r"^[.-]+$").unwrap();
+    let re_2 = Regex::new(r"^[/]+$").unwrap();
+    for word in &words {
+        if !re.is_match(word) {
+            if !re_2.is_match(word) {
+                encode = true;
+                break;
+            }
+        }
+    }
+    if encode {
+        return Decision::ENCODE;
+    }
+    return Decision::DECODE;
 }
 
 pub fn json_from_file(path: &str) -> Result<Json, FileStatus> {
@@ -39,21 +66,23 @@ pub fn utf8_slice(s: &str, start: usize, end: usize) -> Option<&str> {
     for _ in start..end {
         iter.next();
     }
-    Some(&s[start_pos..*iter.peek()?])
+    return Some(&s[start_pos..*iter.peek()?]);
 }
 
-pub fn encode(input: &str, json: &Json) -> Result<String, String> {
+pub fn clean_input(input: &str) -> String {
     let clean_input = Regex::new(r"\s+")
         .unwrap()
         .replace_all(&input, " ")
         .to_string();
-    let clean_input_len = clean_input.chars().count();
+    return clean_input.trim().to_string();
+}
+
+pub fn encode(input: &str, json: &Json) -> Result<String, String> {
+    let clean_input = clean_input(input);
+    let clean_input_len = clean_input.len();
     let mut vec = vec![String::new(); clean_input_len];
     let clean_input_slice = utf8_slice(&clean_input, 0, clean_input_len).unwrap();
     for (i, c) in clean_input_slice.chars().enumerate() {
-        if i == clean_input_len - 1 && c == ' ' {
-            break;
-        }
         let code_char = unescape(
             &match json.find_path(&[&c.to_string()]) {
                 Some(ok) => ok,
@@ -71,10 +100,8 @@ pub fn encode(input: &str, json: &Json) -> Result<String, String> {
 }
 
 pub fn decode(input: &str, json: &Json) -> Result<String, String> {
-    let clean_input = Regex::new(r"\s+")
-        .unwrap()
-        .replace_all(&input, " ")
-        .to_string();
+    let clean_input = clean_input(input);
+    // remove duplicate char: /
     let clean_input = Regex::new(r"/+")
         .unwrap()
         .replace_all(&clean_input, "/")
@@ -96,5 +123,5 @@ pub fn decode(input: &str, json: &Json) -> Result<String, String> {
         vec[i] = code_char;
     }
     let joined = vec.join("");
-    return Ok(joined);
+    return Ok(joined.trim().to_string());
 }
