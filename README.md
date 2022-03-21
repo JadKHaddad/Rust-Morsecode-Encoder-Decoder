@@ -28,3 +28,29 @@ Run
 ```sh
 docker run --rm -it rust-morse:1.0 [OPTIONS]
 ```
+## OpenFaaS
+
+Edit **OpenFaaS/mores-function.yml**
+
+```sh
+version: 1.0
+provider:
+  name: openfaas
+  gateway: <your-openfaas-gateway>
+functions:
+  morse-function:
+    lang: rust
+    handler: ./function
+    image: <your-docker-registry>/morse-function:latest
+```
+
+Deploy
+```sh
+cd OpenFaaS
+
+faas-cli up -f morse-function.yml
+```
+Try it
+```sh
+{"encode":true, "decode":false, "input":"serverless"}
+```

@@ -1,10 +1,7 @@
 [package]
 name = "main"
 version = "0.1.0"
-authors = ["Mark Sta Ana <booyaabooyaabooyaa@gmail.com>"]
+edition = "2021"
 
 [dependencies]
-# deploy
-handler = { path = "../function" }
-# debug build
-# handler = { path = "../../../function" }
+function = { path = "../function" }

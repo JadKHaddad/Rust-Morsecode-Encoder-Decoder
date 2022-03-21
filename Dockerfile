@@ -4,7 +4,7 @@
 FROM rust:1.59.0-slim-buster
 
 COPY main /home/app/main
-COPY functions /home/app/functions
+COPY OpenFaaS /home/app/OpenFaaS
 
 WORKDIR /home/app/main
 RUN cargo build --release

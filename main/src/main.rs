@@ -3,10 +3,10 @@ use colored::*;
 use regex::Regex;
 use std::process;
 
-extern crate functions;
+extern crate function;
 
-static ENCODE_FILE: &str = "morse-code-encode.json";
-static DECODE_FILE: &str = "morse-code-decode.json";
+static ENCODE_FILE: &str = "../OpenFaaS/function/morse-code-encode.json";
+static DECODE_FILE: &str = "../OpenFaaS/function/morse-code-decode.json";
 
 pub fn print_not_valid_input() {
     println!("{} Use -h for help", "Input is not valid.".red());
@@ -42,27 +42,27 @@ fn main() {
     let decode_val = matches.value_of("decode").unwrap_or("");
     let interactive = matches.is_present("interactive");
     let re = Regex::new(r"^\[.*?\]$").unwrap();
-    let json_encode = match functions::json_from_file(ENCODE_FILE) {
+    let json_encode = match function::json_from_file(ENCODE_FILE) {
         Ok(ok) => ok,
         Err(err) => match err {
-            functions::FileStatus::NotFound => {
+            function::FileStatus::NotFound => {
                 println!("Error: Could not find file: {}", ENCODE_FILE);
                 process::exit(1);
             }
-            functions::FileStatus::NotValid => {
+            function::FileStatus::NotValid => {
                 println!("Error: Encode file is not valid: {}", ENCODE_FILE);
                 process::exit(1);
             }
         },
     };
-    let json_decode = match functions::json_from_file(DECODE_FILE) {
+    let json_decode = match function::json_from_file(DECODE_FILE) {
         Ok(ok) => ok,
         Err(err) => match err {
-            functions::FileStatus::NotFound => {
+            function::FileStatus::NotFound => {
                 println!("Error: Could not find file: {}", DECODE_FILE);
                 process::exit(1);
             }
-            functions::FileStatus::NotValid => {
+            function::FileStatus::NotValid => {
                 println!("Error: Encode file is not valid: {}", DECODE_FILE);
                 process::exit(1);
             }
@@ -70,7 +70,7 @@ fn main() {
     };
     if encode_val != "" {
         if re.is_match(encode_val) {
-            match functions::encode(&encode_val[1..encode_val.len() - 1], &json_encode) {
+            match function::encode(&encode_val[1..encode_val.len() - 1], &json_encode) {
                 Ok(ok) => {
                     println!("{}", ok.green());
                     process::exit(0);
@@ -88,7 +88,7 @@ fn main() {
         }
     } else if decode_val != "" {
         if re.is_match(decode_val) {
-            match functions::decode(&decode_val[1..decode_val.len() - 1], &json_decode) {
+            match function::decode(&decode_val[1..decode_val.len() - 1], &json_decode) {
                 Ok(ok) => {
                     println!("{}", ok.green());
                     process::exit(0);
@@ -111,8 +111,8 @@ fn main() {
             std::io::stdin()
                 .read_line(&mut input)
                 .expect("Error: Failed to read line");
-            match functions::decide(&input) {
-                functions::Decision::ENCODE => match functions::encode(&input, &json_encode) {
+            match function::decide(&input) {
+                function::Decision::ENCODE => match function::encode(&input, &json_encode) {
                     Ok(ok) => println!("\nEncode: {}", ok.green()),
                     Err(err) => {
                         println!(
@@ -122,7 +122,7 @@ fn main() {
                         continue;
                     }
                 },
-                functions::Decision::DECODE => match functions::decode(&input, &json_decode) {
+                function::Decision::DECODE => match function::decode(&input, &json_decode) {
                     Ok(ok) => println!("\nDecode: {}", ok.green()),
                     Err(err) => {
                         println!(

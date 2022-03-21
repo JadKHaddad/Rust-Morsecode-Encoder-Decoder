@@ -3,10 +3,8 @@ name = "morsecode_encoder_decoder"
 version = "0.1.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
-functions = { path = "../functions" }
+function = { path = "../OpenFaaS/function" }
 regex = "1"
 colored = "2.0.0"
 clap = { version = "3.1.6", features = ["derive"] }
