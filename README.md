@@ -2,7 +2,8 @@
 
 ```sh
 cd main
-cargo run --
+
+cargo run -- [OPTIONS]
 ```
 ```sh
 Morsecode Encoder Decoder 1.0
