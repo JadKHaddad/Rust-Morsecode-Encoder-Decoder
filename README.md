@@ -41,7 +41,7 @@ functions:
   morse-function:
     lang: rust
     handler: ./function
-    image: <your-docker-registry>/morse-function:latest
+    image: <your-container-registry>/morse-function:latest
 ```
 
 Deploy
