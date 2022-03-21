@@ -1,5 +1,5 @@
 [package]
-name = "morsecode_encoder_decoder"
+name = "functions"
 version = "0.1.0"
 edition = "2021"
 
@@ -9,5 +9,3 @@ edition = "2021"
 rustc-serialize = "0.3"
 snailquote = "0.1.1"
 regex = "1"
-colored = "2.0.0"
-clap = { version = "3.1.6", features = ["derive"] }

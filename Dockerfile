@@ -3,7 +3,9 @@
 
 FROM rust:1.59.0-slim-buster
 
-COPY . /home/app/
-WORKDIR /home/app/
+COPY main /home/app/main
+COPY functions /home/app/functions
+
+WORKDIR /home/app/main
 RUN cargo build --release
-ENTRYPOINT [ "/home/app/target/release/morsecode_encoder_decoder" ]
+ENTRYPOINT [ "/home/app/main/target/release/morsecode_encoder_decoder" ]
