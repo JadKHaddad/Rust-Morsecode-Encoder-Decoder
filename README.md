@@ -42,7 +42,7 @@ functions:
   morse-function:
     lang: rust
     handler: ./function
-    image: <your-container-registry>/morse-function:latest
+    image: <your-container-registry>/morse-function:1.0
 ```
 
 Deploy

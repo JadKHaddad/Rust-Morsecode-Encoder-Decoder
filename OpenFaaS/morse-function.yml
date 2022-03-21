@@ -6,4 +6,4 @@ functions:
   morse-function:
     lang: rust
     handler: ./function
-    image: localhost:32000/morse-function:latest
+    image: localhost:32000/morse-function:1.0
