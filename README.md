@@ -30,7 +30,7 @@ docker run --rm -it rust-morse:1.0 [OPTIONS]
 ```
 ## OpenFaaS
 
-Edit **OpenFaaS/mores-function.yml**
+Edit **OpenFaaS/morse-function.yml**
 
 ```sh
 version: 1.0
