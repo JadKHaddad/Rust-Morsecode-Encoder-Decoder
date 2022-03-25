@@ -13,7 +13,7 @@ pub fn print_not_valid_input() {
 }
 
 fn main() {
-    let matches = Command::new("Morsecode Encoder Decoder")
+    let matches = Command::new("Morsecode Encoder/Decoder")
         .arg_required_else_help(true)
         .version("1.0")
         .arg(
@@ -21,7 +21,7 @@ fn main() {
                 .short('e')
                 .long("encode")
                 .takes_value(true)
-                .help("Encode string. Usage: -e \"[string]\""),
+                .help("Encode string. Usage: -e \"[nice]\""),
         )
         .arg(
             Arg::new("decode")
