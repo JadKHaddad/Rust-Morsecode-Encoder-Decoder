@@ -21,19 +21,12 @@ pub fn decide(input: &str) -> Decision {
     let split = clean_input.split(" ");
     let words: Vec<&str> = split.collect();
     // if all words consist of - and . => decode else encode
-    let mut encode = false;
     let re = Regex::new(r"^[.-]+$").unwrap();
     let re_2 = Regex::new(r"^[/]+$").unwrap();
     for word in &words {
-        if !re.is_match(word) {
-            if !re_2.is_match(word) {
-                encode = true;
-                break;
-            }
+        if !re.is_match(word) && !re_2.is_match(word){
+            return Decision::ENCODE;
         }
-    }
-    if encode {
-        return Decision::ENCODE;
     }
     return Decision::DECODE;
 }
